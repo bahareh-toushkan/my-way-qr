@@ -1,0 +1,15 @@
+{
+  "functions": {
+    "api/adapt.ts": { "maxDuration": 60 },
+    "api/profile-from-text.ts": { "maxDuration": 30 }
+  },
+  "rewrites": [
+    { "source": "/((?!api/|assets/|.*\\..*).*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+    }
+  ]
+}
