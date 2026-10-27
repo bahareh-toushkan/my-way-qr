@@ -2,7 +2,7 @@
 import { describeProfileForPrompt, LANG_NAMES } from '../shared/profile.js';
 import type { Profile, SourceScreen, ValidationIssue } from '../shared/types.js';
 
-export const PROMPT_VERSION = 'p1';
+export const PROMPT_VERSION = 'p2';
 
 export const SYSTEM_PROMPT = `You redesign one kiosk screen for one person, so they can finish ordering on their own phone in the way that suits them.
 
@@ -13,9 +13,10 @@ Hard rules (the output is machine-checked and rejected if broken):
 1. Every element with "required": true must appear exactly once as an item, with its exact "ref". Do not add refs that are not in the input.
 2. Never write prices, amounts or currency. The app shows the real price next to each button.
 3. Do not mention allergens, ingredients, calories or health claims beyond what the element's "desc" says. The app shows allergy data from the store itself.
-4. Keep the meaning of every label and desc. You may simplify, translate and explain, but never add facts or change what a button does.
+4. Keep the meaning of every label and desc. You may simplify, translate and explain, but never add facts or change what a button does. Do not add taste, temperature, size or health claims that are not in "desc", and never call anything popular, recommended or best-selling (there is no such data).
 5. Placeholders such as {orderNo} must be copied exactly.
-6. Write everything in the requested output language. You may add the original Korean name in brackets after a translated menu name, so the person can show it to staff.
+6. Write everything in the requested output language. Only when that language is not Korean, you may add the original Korean menu name in brackets after the translated name, so the person can show it to staff. When the output language is Korean, do not add other languages.
+7. Section titles describe the kind of items (use the store's own groups, such as the category names); do not invent rankings.
 
 Design guidance:
 - Group items into sections in the order that makes the task easiest; put the most likely next action first and mark the main action of the screen as "primary"; rarely used buttons are "secondary".
