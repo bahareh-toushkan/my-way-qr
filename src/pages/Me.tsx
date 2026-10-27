@@ -220,12 +220,16 @@ function Ordering({ sid, profile, testMode, onEdit }: { sid: string; profile: Pr
         </main>
       )}
 
-      {state.step !== 'done' && state.step !== 'pay' && cartCount(state) > 0 && (
-        <footer className="me-foot">
+      {(state.step === 'menu' || state.step === 'options') && cartCount(state) > 0 && (
+        // 합계 바를 누르면 장바구니로 (사용자 테스트 피드백 10/27)
+        <button className="me-foot" disabled={busy} onClick={() => press('nav:cart', itemMap(specs.menu).get('nav:cart'))}>
           <span>
             🛒 {cartCount(state)} · {ui.total} <b>{formatPrice(cartTotal(state), profile.lang)}</b>
           </span>
-        </footer>
+          <span className="go">
+            {itemMap(specs.menu).get('nav:cart')?.label ?? '🛒'} {isRtl(profile.lang) ? '‹' : '›'}
+          </span>
+        </button>
       )}
 
       {toast && <div className="toast" role="status">{toast}</div>}

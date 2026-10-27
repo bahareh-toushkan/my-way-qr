@@ -1,15 +1,30 @@
 {
   "functions": {
-    "api/adapt.ts": { "maxDuration": 60 },
-    "api/profile-from-text.ts": { "maxDuration": 30 }
+    "api/adapt.ts": {
+      "maxDuration": 60
+    },
+    "api/profile-from-text.ts": {
+      "maxDuration": 30
+    },
+    "api/tts.ts": {
+      "maxDuration": 60
+    }
   },
   "rewrites": [
-    { "source": "/((?!api/|assets/|.*\\..*).*)", "destination": "/index.html" }
+    {
+      "source": "/((?!api/|assets/|.*\\..*).*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
       "source": "/sw.js",
-      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
     }
   ]
 }
