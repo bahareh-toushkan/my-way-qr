@@ -32,9 +32,10 @@ export default handler(['POST'], async (req, res) => {
   if (!key) throw new HttpError(503, 'AI 키가 없어요');
   const b = await readJson(req);
   const text = typeof b.text === 'string' ? b.text.trim() : '';
-  if (!text || text.length > 1200) throw new HttpError(400, '문장은 1~1200자');
+  if (!text || text.length > 3000) throw new HttpError(400, '문장은 1~3000자');
   const voice = typeof b.voice === 'string' && /^[A-Za-z]{2,20}$/.test(b.voice) ? b.voice : 'Sulafat';
-  const style = typeof b.style === 'string' ? b.style.slice(0, 200) : 'Read this as a calm, warm, clear Korean documentary narrator, at a relaxed pace:';
+  // 지시문을 붙이면 그대로 읽어 버리는 경우가 있어서 기본은 본문만 보낸다
+  const style = typeof b.style === 'string' ? b.style.slice(0, 200) : '';
   if ((await kv.incr(`aibudget:${todayKey()}`, 60 * 60 * 48)) > dailyLimit()) throw new HttpError(429, '오늘 AI 한도를 넘었어요');
 
   let lastErr = '';
@@ -43,7 +44,7 @@ export default handler(['POST'], async (req, res) => {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: `${style}\n${text}` }] }],
+        contents: [{ parts: [{ text: style ? `${style}\n${text}` : text }] }],
         generationConfig: {
           responseModalities: ['AUDIO'],
           speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } },
@@ -66,7 +67,9 @@ export default handler(['POST'], async (req, res) => {
     res.setHeader('content-type', 'audio/wav');
     res.setHeader('x-tts-model', model);
     res.setHeader('cache-control', 'no-store');
-    res.end(wav);
+    // 긴 내레이션은 4.5MB를 넘으므로 나눠서 스트리밍 (스트리밍 응답은 크기 제한 없음)
+    for (let i = 0; i < wav.length; i += 256 * 1024) res.write(wav.subarray(i, i + 256 * 1024));
+    res.end();
     return;
   }
   throw new HttpError(502, `쓸 수 있는 TTS 모델이 없음 (${lastErr})`);
