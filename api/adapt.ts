@@ -20,6 +20,7 @@ export default handler(['POST'], async (req, res) => {
       screenKey: body.screenKey as ScreenKey,
       profile: normalizeProfile(body.profile),
       noCache: isEval,
+      model: isEval && typeof body.model === 'string' && /^[a-z0-9.\-]{3,60}$/.test(body.model) ? body.model : undefined,
     },
     { kv, ai: getProvider() },
   );

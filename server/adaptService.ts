@@ -28,6 +28,8 @@ export interface AdaptInput {
   screenKey: ScreenKey;
   profile: Profile;
   noCache?: boolean;
+  /** 측정용 모델 지정 */
+  model?: string;
 }
 
 export async function adaptScreen(input: AdaptInput, deps: { kv: KV; ai: AiProvider | null; now?: () => number }): Promise<AdaptResponse> {
@@ -78,6 +80,7 @@ export async function adaptScreen(input: AdaptInput, deps: { kv: KV; ai: AiProvi
         user: buildUserPrompt(source, input.profile, previousIssues),
         schema,
         timeoutMs: Math.min(PER_ATTEMPT_MS, remaining),
+        model: input.model,
         mockContext: { source, profile: input.profile, attempt },
       });
       const { result, spec } = validateAdapted(raw, source, input.profile);
@@ -93,7 +96,7 @@ export async function adaptScreen(input: AdaptInput, deps: { kv: KV; ai: AiProvi
           spec,
           source: attempt === 0 ? 'ai' : 'ai-retry',
           provider: providerName,
-          model: deps.ai.model(),
+          model: input.model || deps.ai.model(),
           validation: result,
           attempts,
           latencyMs: clock() - started,

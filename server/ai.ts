@@ -18,6 +18,8 @@ export interface GenerateArgs {
   user: string;
   schema: object;
   timeoutMs: number;
+  /** 측정용: 이 모델만 사용 (후보 전환 없음) */
+  model?: string;
   /** mock 전용: 어떤 화면을 만드는지 */
   mockContext?: { source: SourceScreen; profile: Profile; attempt: number };
 }
@@ -40,10 +42,10 @@ class GeminiProvider implements AiProvider {
 
   constructor(private key: string) {
     const preferred = (process.env.GEMINI_MODEL || '').trim();
-    // 2026-10: 2.5 계열은 새 사용자에게 막힘(404) → 최신 Flash 별칭을 먼저, 그다음 이름 고정 후보
+    // 2026-10: 2.5 계열은 새 사용자에게 막힘(404). 화면 변환은 응답 속도가 중요해서 Flash-Lite를 먼저 쓴다.
     this.models = [
       ...new Set(
-        [preferred, 'gemini-flash-latest', 'gemini-3.5-flash', 'gemini-3-flash', 'gemini-flash-lite-latest', 'gemini-3.5-flash-lite', 'gemini-2.5-flash'].filter(Boolean),
+        [preferred, 'gemini-3.5-flash-lite', 'gemini-flash-lite-latest', 'gemini-3.5-flash', 'gemini-flash-latest', 'gemini-3-flash-preview', 'gemini-2.5-flash'].filter(Boolean),
       ),
     ];
   }
@@ -59,9 +61,15 @@ class GeminiProvider implements AiProvider {
     return this.models[this.active];
   }
 
+  /** 일시적 실패 뒤 다음 후보 모델로 (목록 끝이면 처음으로) */
+  private rotate() {
+    this.active = (this.active + 1) % this.models.length;
+    this.thinkingOk = true;
+  }
+
   async generateJson(args: GenerateArgs): Promise<unknown> {
     for (;;) {
-      const model = this.models[this.active];
+      const model = args.model || this.models[this.active];
       const body: Record<string, unknown> = {
         systemInstruction: { parts: [{ text: args.system }] },
         contents: [{ role: 'user', parts: [{ text: args.user }] }],
@@ -84,13 +92,14 @@ class GeminiProvider implements AiProvider {
           signal: ctrl.signal,
         });
       } catch (e) {
-        throw new AiError(ctrl.signal.aborted ? 'timeout' : 'http', `Gemini 요청 실패: ${(e as Error).message}`);
+        if (!args.model) this.rotate(); // 다음 시도는 다른 모델로
+        throw new AiError(ctrl.signal.aborted ? 'timeout' : 'http', `Gemini 요청 실패(${model}): ${(e as Error).message}`);
       } finally {
         clearTimeout(timer);
       }
       const text = await res.text();
       if (res.status === 429) throw new AiError('rate_limited', 'Gemini 무료 한도 초과(429)');
-      if (res.status === 404) {
+      if (res.status === 404 && !args.model) {
         if (this.active < this.models.length - 1) {
           this.active++; // 모델 이름이 바뀌었거나 쓸 수 없음 → 다음 후보
           this.thinkingOk = true;
@@ -102,7 +111,8 @@ class GeminiProvider implements AiProvider {
         this.thinkingOk = false; // 이 모델은 thinkingConfig를 받지 않음
         continue;
       }
-      if (!res.ok) throw new AiError('http', `Gemini HTTP ${res.status}: ${text.slice(0, 300)}`);
+      if (res.status >= 500 && !args.model) this.rotate(); // 과부하(503) 등 → 다음 시도는 다른 모델로
+      if (!res.ok) throw new AiError('http', `Gemini HTTP ${res.status} (${model}): ${text.slice(0, 300)}`);
       let data: any;
       try {
         data = JSON.parse(text);
