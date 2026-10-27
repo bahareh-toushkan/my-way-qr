@@ -40,7 +40,19 @@ class GeminiProvider implements AiProvider {
 
   constructor(private key: string) {
     const preferred = (process.env.GEMINI_MODEL || '').trim();
-    this.models = [...new Set([preferred, 'gemini-2.5-flash', 'gemini-2.5-flash-lite'].filter(Boolean))];
+    // 2026-10: 2.5 계열은 새 사용자에게 막힘(404) → 최신 Flash 별칭을 먼저, 그다음 이름 고정 후보
+    this.models = [
+      ...new Set(
+        [preferred, 'gemini-flash-latest', 'gemini-3.5-flash', 'gemini-3-flash', 'gemini-flash-lite-latest', 'gemini-3.5-flash-lite', 'gemini-2.5-flash'].filter(Boolean),
+      ),
+    ];
+  }
+
+  /** 모델 세대별 '생각' 설정: 2.x는 thinkingBudget, 3.x 이후는 thinkingLevel (빠르게 응답하도록 낮게) */
+  private thinkingFor(model: string): Record<string, unknown> {
+    if (!this.thinkingOk) return {};
+    if (/gemini-2\./.test(model)) return { thinkingConfig: { thinkingBudget: Number(process.env.GEMINI_THINKING_BUDGET ?? 0) } };
+    return { thinkingConfig: { thinkingLevel: process.env.GEMINI_THINKING_LEVEL || 'low' } };
   }
 
   model() {
@@ -58,7 +70,7 @@ class GeminiProvider implements AiProvider {
           responseSchema: args.schema,
           temperature: 0.4,
           maxOutputTokens: 8192,
-          ...(this.thinkingOk ? { thinkingConfig: { thinkingBudget: Number(process.env.GEMINI_THINKING_BUDGET ?? 0) } } : {}),
+          ...this.thinkingFor(model),
         },
       };
       const ctrl = new AbortController();
@@ -78,9 +90,13 @@ class GeminiProvider implements AiProvider {
       }
       const text = await res.text();
       if (res.status === 429) throw new AiError('rate_limited', 'Gemini 무료 한도 초과(429)');
-      if (res.status === 404 && this.active < this.models.length - 1) {
-        this.active++; // 모델 이름이 바뀌었거나 없음 → 다음 후보
-        continue;
+      if (res.status === 404) {
+        if (this.active < this.models.length - 1) {
+          this.active++; // 모델 이름이 바뀌었거나 쓸 수 없음 → 다음 후보
+          this.thinkingOk = true;
+          continue;
+        }
+        throw new AiError('config', `쓸 수 있는 Gemini 모델이 없음: ${text.slice(0, 200)}`);
       }
       if (res.status === 400 && this.thinkingOk && /thinking/i.test(text)) {
         this.thinkingOk = false; // 이 모델은 thinkingConfig를 받지 않음
@@ -103,6 +119,18 @@ class GeminiProvider implements AiProvider {
       }
     }
   }
+}
+
+/** 진단용: 이 키로 쓸 수 있는 Flash 계열 모델 이름 (키는 응답에 넣지 않음) */
+export async function listGeminiModels(): Promise<string[]> {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) return [];
+  const res = await fetch(`${API}?pageSize=200`, { headers: { 'x-goog-api-key': key } });
+  if (!res.ok) return [`HTTP ${res.status}`];
+  const data = (await res.json()) as { models?: { name: string; supportedGenerationMethods?: string[] }[] };
+  return (data.models ?? [])
+    .filter((m) => m.supportedGenerationMethods?.includes('generateContent') && /flash/.test(m.name))
+    .map((m) => m.name.replace(/^models\//, ''));
 }
 
 // ---------------- Mock (로컬 테스트 전용) ----------------
