@@ -51,8 +51,8 @@ export default handler(['POST'], async (req, res) => {
       }),
     });
     const body = await r.text();
-    if (r.status === 404) {
-      lastErr = `${model}: 404`;
+    if (r.status === 404 || r.status === 429) {
+      lastErr = `${model}: ${r.status}`; // 없거나 무료 한도 초과 → 다음 TTS 모델
       continue;
     }
     if (!r.ok) throw new HttpError(502, `TTS 실패 ${r.status} (${model}): ${body.slice(0, 200)}`);
