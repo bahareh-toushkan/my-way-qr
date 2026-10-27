@@ -1,6 +1,6 @@
 // 화면 변환 프롬프트와 출력 스키마. 버튼 ref는 enum으로 묶어 없는 버튼을 만들 수 없게 한다(제약 디코딩).
-import { describeProfileForPrompt, LANG_NAMES } from '../shared/profile';
-import type { Profile, SourceScreen, ValidationIssue } from '../shared/types';
+import { describeProfileForPrompt, LANG_NAMES } from '../shared/profile.js';
+import type { Profile, SourceScreen, ValidationIssue } from '../shared/types.js';
 
 export const PROMPT_VERSION = 'p1';
 

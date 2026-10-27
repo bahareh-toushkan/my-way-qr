@@ -1,5 +1,5 @@
 // 시연용 예시 매장 데이터 (실제 매장·브랜드 아님). 가격·알레르기 정보도 예시 값이다.
-import type { StoreId } from './types';
+import type { StoreId } from './types.js';
 
 export interface OptionValue {
   id: string;

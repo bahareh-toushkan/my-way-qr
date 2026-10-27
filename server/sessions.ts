@@ -1,9 +1,9 @@
 // 모의 주문 서버: 세션 저장·불러오기·버튼 처리
-import { createSession, reduce } from '../shared/reducer';
-import type { Actor, SessionState, StoreId } from '../shared/types';
-import { todayKey } from './adaptService';
-import { HttpError } from './http';
-import type { KV } from './kv';
+import { createSession, reduce } from '../shared/reducer.js';
+import type { Actor, SessionState, StoreId } from '../shared/types.js';
+import { todayKey } from './adaptService.js';
+import { HttpError } from './http.js';
+import type { KV } from './kv.js';
 
 export const SESSION_TTL = 30 * 60; // 30분 뒤 자동 삭제
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';

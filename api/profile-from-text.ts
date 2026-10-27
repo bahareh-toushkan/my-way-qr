@@ -1,10 +1,10 @@
 // POST /api/profile-from-text {text, profile} → 사용자가 쓴 문장으로 표시 설정 고르기
-import { normalizeProfile } from '../shared/profile';
-import { dailyLimit, todayKey } from '../server/adaptService';
-import { getProvider } from '../server/ai';
-import { handler, HttpError, rateLimit, readJson, send } from '../server/http';
-import { getKV } from '../server/kv';
-import { profileFromText } from '../server/profileFromText';
+import { normalizeProfile } from '../shared/profile.js';
+import { dailyLimit, todayKey } from '../server/adaptService.js';
+import { getProvider } from '../server/ai.js';
+import { handler, HttpError, rateLimit, readJson, send } from '../server/http.js';
+import { getKV } from '../server/kv.js';
+import { profileFromText } from '../server/profileFromText.js';
 
 export default handler(['POST'], async (req, res) => {
   const kv = getKV();

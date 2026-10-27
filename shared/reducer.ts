@@ -1,6 +1,6 @@
 // 모의 주문·결제 서버의 상태 기계. 키오스크와 휴대폰이 같은 '버튼 ref'로 같은 상태를 바꾼다.
-import { allowedValues, findGroup, findItem, getStore, type StoreDef } from './catalog';
-import type { Actor, CartLine, Draft, SessionState, StoreId } from './types';
+import { allowedValues, findGroup, findItem, getStore, type StoreDef } from './catalog.js';
+import type { Actor, CartLine, Draft, SessionState, StoreId } from './types.js';
 
 export function createSession(id: string, store: StoreId, now = Date.now()): SessionState {
   const s = getStore(store);

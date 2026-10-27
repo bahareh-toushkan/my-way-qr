@@ -1,6 +1,6 @@
 // 키오스크 SDK 역할: 원래 키오스크 화면을 '구조 데이터'로 내보낸다. AI는 이 데이터만 보고 변환한다.
-import { CONTROLS, getStore } from './catalog';
-import type { ScreenKey, SourceElement, SourceScreen, StoreId } from './types';
+import { CONTROLS, getStore } from './catalog.js';
+import type { ScreenKey, SourceElement, SourceScreen, StoreId } from './types.js';
 
 function control(ref: string, required = true): SourceElement {
   const c = CONTROLS[ref];

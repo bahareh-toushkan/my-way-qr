@@ -1,8 +1,8 @@
 // POST /api/action {s, ref, actor} → 키오스크·휴대폰 버튼을 모의 주문 서버에 반영
-import type { Actor } from '../shared/types';
-import { handler, HttpError, rateLimit, readJson, send } from '../server/http';
-import { getKV } from '../server/kv';
-import { act, isValidId } from '../server/sessions';
+import type { Actor } from '../shared/types.js';
+import { handler, HttpError, rateLimit, readJson, send } from '../server/http.js';
+import { getKV } from '../server/kv.js';
+import { act, isValidId } from '../server/sessions.js';
 
 export default handler(['POST'], async (req, res) => {
   const kv = getKV();

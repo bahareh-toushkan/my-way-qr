@@ -1,5 +1,5 @@
 // '내 방식' 프로필: 정규화, 화면 제약(코드로 강제), 프롬프트용 설명, 측정용 대표 프로필
-import { LANGS, type Lang, type Profile } from './types';
+import { LANGS, type Lang, type Profile } from './types.js';
 
 export const DEFAULT_PROFILE: Profile = {
   v: 1,

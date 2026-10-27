@@ -1,5 +1,5 @@
 // 휴대폰 앱의 고정 문구(메뉴 이름이 아닌 틀 문구). 메뉴 내용은 AI가 프로필 언어로 바꾼다.
-import type { Lang } from './types';
+import type { Lang } from './types.js';
 
 export interface UiStrings {
   appName: string;

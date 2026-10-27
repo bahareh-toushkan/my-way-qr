@@ -1,8 +1,8 @@
 // '말로 설정하기': 사용자가 쓴 문장 → 표시 설정. AI가 안 되면 낱말 규칙으로 대체.
-import { DEFAULT_PROFILE, normalizeProfile } from '../shared/profile';
-import type { Lang, Profile } from '../shared/types';
-import { AiError, type AiProvider } from './ai';
-import { PROFILE_SCHEMA, PROFILE_SYSTEM_PROMPT } from './prompt';
+import { DEFAULT_PROFILE, normalizeProfile } from '../shared/profile.js';
+import type { Lang, Profile } from '../shared/types.js';
+import { AiError, type AiProvider } from './ai.js';
+import { PROFILE_SCHEMA, PROFILE_SYSTEM_PROMPT } from './prompt.js';
 
 export interface ProfileFromTextResult {
   profile: Profile;

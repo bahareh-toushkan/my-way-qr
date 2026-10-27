@@ -1,7 +1,7 @@
 // POST /api/metric → 사용자 테스트 기록(익명: 시간·동작 수만) · GET /api/metric?key= → 기록 보기
-import { STORE_IDS, type MetricRecord, type StoreId } from '../shared/types';
-import { evalKeyOk, handler, HttpError, query, rateLimit, readJson, send } from '../server/http';
-import { getKV } from '../server/kv';
+import { STORE_IDS, type MetricRecord, type StoreId } from '../shared/types.js';
+import { evalKeyOk, handler, HttpError, query, rateLimit, readJson, send } from '../server/http.js';
+import { getKV } from '../server/kv.js';
 
 const KEY = 'metrics:v1';
 

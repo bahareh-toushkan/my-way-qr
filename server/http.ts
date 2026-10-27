@@ -1,6 +1,6 @@
 // Vercel 함수와 로컬 개발 서버에서 똑같이 쓰는 최소 HTTP 도우미 (Node req/res만 사용)
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { KV } from './kv';
+import type { KV } from './kv.js';
 
 export type Req = IncomingMessage & { body?: unknown };
 export type Res = ServerResponse;

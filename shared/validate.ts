@@ -1,8 +1,8 @@
 // AI가 만든 화면 검증기: 기능(버튼 1:1), 사실(가격·알레르기), 언어, 화면 규칙을 검사한다.
 // hard = 주문 기능이나 사실이 틀릴 수 있는 문제 → 사용하지 않고 재시도/대체
 // soft = 렌더러가 보정할 수 있는 규칙 위반 → 사용하되 기록
-import { constraintsFor } from './profile';
-import type { AdaptedItem, AdaptedScreen, Priority, Profile, SourceScreen, ValidationIssue, ValidationResult } from './types';
+import { constraintsFor } from './profile.js';
+import type { AdaptedItem, AdaptedScreen, Priority, Profile, SourceScreen, ValidationIssue, ValidationResult } from './types.js';
 
 const PRIORITIES: Priority[] = ['primary', 'normal', 'secondary'];
 

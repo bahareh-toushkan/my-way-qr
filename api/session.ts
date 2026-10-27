@@ -1,8 +1,8 @@
 // POST /api/session {store} → 새 키오스크 세션 · GET /api/session?s=ID → 현재 상태
-import { STORE_IDS, type StoreId } from '../shared/types';
-import { handler, HttpError, query, rateLimit, readJson, send } from '../server/http';
-import { getKV } from '../server/kv';
-import { createNew, isValidId, load } from '../server/sessions';
+import { STORE_IDS, type StoreId } from '../shared/types.js';
+import { handler, HttpError, query, rateLimit, readJson, send } from '../server/http.js';
+import { getKV } from '../server/kv.js';
+import { createNew, isValidId, load } from '../server/sessions.js';
 
 export default handler(['GET', 'POST'], async (req, res) => {
   const kv = getKV();

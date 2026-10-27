@@ -1,12 +1,12 @@
 // 화면 변환 파이프라인: 캐시 → 하루 한도 확인 → AI 변환 → 검증 → (실패 시) 오류를 알려 주고 1번 재시도 → 규칙 기반 대체
-import { fallbackSpec } from '../shared/fallback';
-import { profileKey } from '../shared/profile';
-import { describeScreen, refsOf } from '../shared/screens';
-import type { AdaptResponse, AttemptLog, Profile, ScreenKey, StoreId, ValidationIssue } from '../shared/types';
-import { validateAdapted } from '../shared/validate';
-import { AiError, type AiProvider } from './ai';
-import type { KV } from './kv';
-import { adaptedSchema, buildUserPrompt, PROMPT_VERSION, SYSTEM_PROMPT } from './prompt';
+import { fallbackSpec } from '../shared/fallback.js';
+import { profileKey } from '../shared/profile.js';
+import { describeScreen, refsOf } from '../shared/screens.js';
+import type { AdaptResponse, AttemptLog, Profile, ScreenKey, StoreId, ValidationIssue } from '../shared/types.js';
+import { validateAdapted } from '../shared/validate.js';
+import { AiError, type AiProvider } from './ai.js';
+import type { KV } from './kv.js';
+import { adaptedSchema, buildUserPrompt, PROMPT_VERSION, SYSTEM_PROMPT } from './prompt.js';
 
 const CACHE_TTL = 60 * 60 * 24 * 14; // 14일
 const MAX_ATTEMPTS = 2;

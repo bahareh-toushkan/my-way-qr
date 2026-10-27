@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { getStore } from '../shared/catalog';
-import { fallbackSpec } from '../shared/fallback';
-import { DEFAULT_PROFILE, normalizeProfile, TEST_PROFILES } from '../shared/profile';
-import { cartTotal, createSession, reduce } from '../shared/reducer';
-import { describeScreen, refsOf } from '../shared/screens';
-import { SCREEN_KEYS, STORE_IDS, type AdaptedScreen, type Profile } from '../shared/types';
-import { validateAdapted } from '../shared/validate';
-import { adaptScreen } from '../server/adaptService';
-import { AiError, type AiProvider } from '../server/ai';
-import { resetKVForTests } from '../server/kv';
-import { rulesProfile } from '../server/profileFromText';
+import { getStore } from '../shared/catalog.js';
+import { fallbackSpec } from '../shared/fallback.js';
+import { DEFAULT_PROFILE, normalizeProfile, TEST_PROFILES } from '../shared/profile.js';
+import { cartTotal, createSession, reduce } from '../shared/reducer.js';
+import { describeScreen, refsOf } from '../shared/screens.js';
+import { SCREEN_KEYS, STORE_IDS, type AdaptedScreen, type Profile } from '../shared/types.js';
+import { validateAdapted } from '../shared/validate.js';
+import { adaptScreen } from '../server/adaptService.js';
+import { AiError, type AiProvider } from '../server/ai.js';
+import { resetKVForTests } from '../server/kv.js';
+import { rulesProfile } from '../server/profileFromText.js';
 
 const ko: Profile = { ...DEFAULT_PROFILE };
 const en: Profile = { ...DEFAULT_PROFILE, lang: 'en' };

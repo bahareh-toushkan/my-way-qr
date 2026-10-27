@@ -1,8 +1,8 @@
 // AI가 실패하거나 한도를 넘었을 때 쓰는 규칙 기반 '간단 화면'. 원래 데이터만 사용한다.
-import { findItem, getStore } from './catalog';
-import { t } from './i18n';
-import { constraintsFor } from './profile';
-import type { AdaptedItem, AdaptedScreen, AdaptedSection, Priority, Profile, SourceElement, SourceScreen } from './types';
+import { findItem, getStore } from './catalog.js';
+import { t } from './i18n.js';
+import { constraintsFor } from './profile.js';
+import type { AdaptedItem, AdaptedScreen, AdaptedSection, Priority, Profile, SourceElement, SourceScreen } from './types.js';
 
 function labelOf(e: SourceElement, useKo: boolean): string {
   return useKo ? e.label : e.labelEn;

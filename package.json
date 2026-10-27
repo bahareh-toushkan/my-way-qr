@@ -2,6 +2,7 @@
   "name": "my-way-qr",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
   "description": "내 방식 QR — 키오스크 화면을 사용자 방식(큰 글씨·쉬운 말·읽어 주기·언어)으로 AI가 실시간 변환하는 시제품",
   "scripts": {
     "dev": "vite",

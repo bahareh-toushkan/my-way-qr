@@ -1,10 +1,10 @@
 // POST /api/adapt {store, screenKey, profile, noCache?, evalKey?} → '내 방식' 화면 (AI 변환 + 검증)
-import { normalizeProfile } from '../shared/profile';
-import { SCREEN_KEYS, STORE_IDS, type ScreenKey, type StoreId } from '../shared/types';
-import { adaptScreen } from '../server/adaptService';
-import { getProvider } from '../server/ai';
-import { evalKeyOk, handler, HttpError, rateLimit, readJson, send } from '../server/http';
-import { getKV } from '../server/kv';
+import { normalizeProfile } from '../shared/profile.js';
+import { SCREEN_KEYS, STORE_IDS, type ScreenKey, type StoreId } from '../shared/types.js';
+import { adaptScreen } from '../server/adaptService.js';
+import { getProvider } from '../server/ai.js';
+import { evalKeyOk, handler, HttpError, rateLimit, readJson, send } from '../server/http.js';
+import { getKV } from '../server/kv.js';
 
 export default handler(['POST'], async (req, res) => {
   const kv = getKV();

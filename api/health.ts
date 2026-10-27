@@ -1,9 +1,9 @@
 // GET /api/health → 배포 상태 확인 (AI 공급자·모델·저장소 종류)
-import { dailyLimit, todayKey } from '../server/adaptService';
-import { getProvider } from '../server/ai';
-import { handler, send } from '../server/http';
-import { getKV } from '../server/kv';
-import { PROMPT_VERSION } from '../server/prompt';
+import { dailyLimit, todayKey } from '../server/adaptService.js';
+import { getProvider } from '../server/ai.js';
+import { handler, send } from '../server/http.js';
+import { getKV } from '../server/kv.js';
+import { PROMPT_VERSION } from '../server/prompt.js';
 
 export default handler(['GET'], async (_req, res) => {
   const kv = getKV();

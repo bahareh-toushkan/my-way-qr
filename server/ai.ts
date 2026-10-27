@@ -1,8 +1,8 @@
 // AI 공급자: Google Gemini(REST, 구조화 JSON 출력). 로컬 테스트용 mock도 있다(측정·보고에 쓰면 안 됨).
-import { getStore } from '../shared/catalog';
-import type { AdaptedScreen, Profile, SourceScreen } from '../shared/types';
-import { constraintsFor } from '../shared/profile';
-import { t } from '../shared/i18n';
+import { getStore } from '../shared/catalog.js';
+import type { AdaptedScreen, Profile, SourceScreen } from '../shared/types.js';
+import { constraintsFor } from '../shared/profile.js';
+import { t } from '../shared/i18n.js';
 
 export class AiError extends Error {
   constructor(
